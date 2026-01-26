@@ -42,7 +42,8 @@ The application is divided into two distinct modes: **The Kid's Space** (Adventu
 
 ## 🖼️ Screenshots
 
-*(Place screenshots of the Landing Page, Emotion Puzzle, and Parent Dashboard here)*
+*<img width="2513" height="1302" alt="image" src="https://github.com/user-attachments/assets/79b23a7e-ae3c-45a7-9214-d2db9420a94d" />
+*
 
 ---
 
