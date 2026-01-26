@@ -68,7 +68,7 @@ To run the Luma MVP locally:
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/luma.git
+    git clone https://github.com//Hedy1Biblee/Luma.git
     cd luma
     ```
 
