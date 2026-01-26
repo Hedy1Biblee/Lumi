@@ -1,0 +1,7 @@
+{
+  "name": "Luma",
+  "description": "An emotion recognition training app for children with ASD and their parents, featuring a gamified learning space and progress dashboard.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
