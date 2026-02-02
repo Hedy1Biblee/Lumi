@@ -1,3 +1,5 @@
+export type Language = 'en' | 'cn';
+
 export enum AppView {
   LANDING = 'LANDING',
   KID_DASHBOARD = 'KID_DASHBOARD',
@@ -17,6 +19,7 @@ export enum Emotion {
 export interface Level {
   id: string;
   name: string;
+  name_cn: string; // Added for Chinese
   status: 'unlocked' | 'locked' | 'completed';
   type: 'puzzle' | 'mirror' | 'story';
   stars: number;
@@ -46,6 +49,7 @@ export interface MoodLog {
 export interface Scenario {
   id: string;
   text: string;
+  text_cn: string; // Added for Chinese
   icon: string; // Emoji
   correctEmotion: Emotion;
 }

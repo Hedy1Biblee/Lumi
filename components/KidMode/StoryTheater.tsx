@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import Button from '../Button';
-import { Scenario, Emotion } from '../../types';
+import { Scenario, Emotion, Language } from '../../types';
+import { TRANSLATIONS } from '../../translations';
 
 interface StoryTheaterProps {
   scenario: Scenario;
+  lang: Language;
   onComplete: (success: boolean) => void;
   onBack: () => void;
 }
 
-const StoryTheater: React.FC<StoryTheaterProps> = ({ scenario, onComplete, onBack }) => {
+const StoryTheater: React.FC<StoryTheaterProps> = ({ scenario, lang, onComplete, onBack }) => {
+  const t = TRANSLATIONS[lang];
   const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
   const [isWrong, setIsWrong] = useState(false);
 
@@ -40,11 +43,13 @@ const StoryTheater: React.FC<StoryTheaterProps> = ({ scenario, onComplete, onBac
     }
   };
 
+  const scenarioText = lang === 'cn' ? scenario.text_cn : scenario.text;
+
   return (
     <div className="flex flex-col h-full relative p-4">
       <div className="absolute top-4 left-4 z-20">
         <Button variant="secondary" size="sm" onClick={onBack} icon={<ArrowLeft size={20} />}>
-          Map
+          {t.common.map}
         </Button>
       </div>
 
@@ -54,9 +59,9 @@ const StoryTheater: React.FC<StoryTheaterProps> = ({ scenario, onComplete, onBac
              <div className="absolute top-0 left-0 w-full h-2 bg-[#B0C4DE]"></div>
              <div className="text-6xl mb-6 animate-bounce">{scenario.icon}</div>
              <h2 className="text-2xl md:text-4xl font-bold text-[#FDF5E6] leading-tight">
-               "{scenario.text}"
+               "{scenarioText}"
              </h2>
-             <p className="mt-4 text-[#9CA3AF] text-lg">How do you feel?</p>
+             <p className="mt-4 text-[#9CA3AF] text-lg">{t.story.question}</p>
         </div>
 
         {/* Options */}
@@ -76,7 +81,7 @@ const StoryTheater: React.FC<StoryTheaterProps> = ({ scenario, onComplete, onBac
                     `}
                 >
                     <span className="text-5xl">{getEmoji(emotion)}</span>
-                    <span className="text-[#FDF5E6] font-bold text-lg">{emotion}</span>
+                    <span className="text-[#FDF5E6] font-bold text-lg">{t.emotions[emotion]}</span>
                 </button>
             ))}
         </div>

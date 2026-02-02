@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera, Smile, ArrowLeft } from 'lucide-react';
 import Button from '../Button';
-import { Emotion } from '../../types';
+import { Emotion, Language } from '../../types';
+import { TRANSLATIONS } from '../../translations';
 
 interface MagicMirrorProps {
   targetEmotion: Emotion;
+  lang: Language;
   onComplete: (success: boolean) => void;
   onBack: () => void;
 }
 
-const MagicMirror: React.FC<MagicMirrorProps> = ({ targetEmotion, onComplete, onBack }) => {
+const MagicMirror: React.FC<MagicMirrorProps> = ({ targetEmotion, lang, onComplete, onBack }) => {
+  const t = TRANSLATIONS[lang];
   const [confidence, setConfidence] = useState(0);
   const [isCapturing, setIsCapturing] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -59,14 +62,14 @@ const MagicMirror: React.FC<MagicMirrorProps> = ({ targetEmotion, onComplete, on
     <div className="flex flex-col h-full relative p-4">
        <div className="absolute top-4 left-4 z-20">
         <Button variant="secondary" size="sm" onClick={onBack} icon={<ArrowLeft size={20} />}>
-          Map
+          {t.common.map}
         </Button>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">
         <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-[#FDF5E6]">Show me: {targetEmotion}</h2>
-            <p className="text-[#B0C4DE]">Can you mimic the face?</p>
+            <h2 className="text-2xl font-bold text-[#FDF5E6]">{t.mirror.title} {t.emotions[targetEmotion]}</h2>
+            <p className="text-[#B0C4DE]">{t.mirror.subtitle}</p>
         </div>
 
         {/* Camera Frame */}
@@ -95,9 +98,9 @@ const MagicMirror: React.FC<MagicMirrorProps> = ({ targetEmotion, onComplete, on
             {showSuccess && (
                 <div className="absolute inset-0 bg-[#9CAF88]/80 flex flex-col items-center justify-center z-10 backdrop-blur-sm animate-fade-in">
                     <Smile size={80} className="text-white mb-4 animate-bounce" />
-                    <h3 className="text-3xl font-bold text-white mb-6">You did it!</h3>
+                    <h3 className="text-3xl font-bold text-white mb-6">{t.mirror.success}</h3>
                     <Button variant="primary" onClick={() => onComplete(true)} className="shadow-lg">
-                        Collect Star!
+                        {t.mirror.collect}
                     </Button>
                 </div>
             )}
@@ -110,7 +113,7 @@ const MagicMirror: React.FC<MagicMirrorProps> = ({ targetEmotion, onComplete, on
             />
         </div>
         <div className="mt-2 text-sm text-[#9CA3AF] font-medium flex justify-between w-full max-w-md px-2">
-            <span>Matching...</span>
+            <span>{t.mirror.matching}</span>
             <span>{Math.round(confidence)}%</span>
         </div>
 

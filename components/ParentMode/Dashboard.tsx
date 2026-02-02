@@ -2,15 +2,18 @@ import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { ArrowLeft, Activity, Brain } from 'lucide-react';
 import Button from '../Button';
-import { UserStats, Emotion } from '../../types';
+import { UserStats, Emotion, Language } from '../../types';
 import { COLORS } from '../../constants';
+import { TRANSLATIONS } from '../../translations';
 
 interface DashboardProps {
   stats: UserStats;
+  lang: Language;
   onBack: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
+const Dashboard: React.FC<DashboardProps> = ({ stats, lang, onBack }) => {
+  const t = TRANSLATIONS[lang];
 
   // Transform UserStats into Recharts format
   // We calculate proficiency score (0-100) based on correct/attempts
@@ -21,10 +24,10 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
   };
 
   const data = [
-    { subject: 'Happy', A: calculateScore(Emotion.HAPPY), fullMark: 100 },
-    { subject: 'Sad', A: calculateScore(Emotion.SAD), fullMark: 100 },
-    { subject: 'Angry', A: calculateScore(Emotion.ANGRY), fullMark: 100 },
-    { subject: 'Surprised', A: calculateScore(Emotion.SURPRISED), fullMark: 100 },
+    { subject: t.emotions[Emotion.HAPPY], A: calculateScore(Emotion.HAPPY), fullMark: 100 },
+    { subject: t.emotions[Emotion.SAD], A: calculateScore(Emotion.SAD), fullMark: 100 },
+    { subject: t.emotions[Emotion.ANGRY], A: calculateScore(Emotion.ANGRY), fullMark: 100 },
+    { subject: t.emotions[Emotion.SURPRISED], A: calculateScore(Emotion.SURPRISED), fullMark: 100 },
   ];
 
   return (
@@ -32,12 +35,12 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={onBack} size="sm" icon={<ArrowLeft size={20} />}>
-                Home
+                {t.common.home}
             </Button>
-            <h1 className="text-3xl font-bold text-[#B0C4DE]">Parent's Lighthouse</h1>
+            <h1 className="text-3xl font-bold text-[#B0C4DE]">{t.dashboard.title}</h1>
         </div>
         <div className="bg-[#2E3244] px-4 py-2 rounded-xl text-[#FDF5E6]">
-            Total Stars Collected: <span className="text-yellow-400 font-bold text-xl ml-2">{stats.totalStars} ★</span>
+            {t.dashboard.totalStars} <span className="text-yellow-400 font-bold text-xl ml-2">{stats.totalStars} ★</span>
         </div>
       </div>
 
@@ -47,7 +50,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
         <div className="bg-[#2E3244] p-6 rounded-3xl shadow-lg">
             <div className="flex items-center gap-2 mb-6">
                 <Activity className="text-[#B0C4DE]" />
-                <h2 className="text-xl font-bold text-[#FDF5E6]">Real-time Proficiency</h2>
+                <h2 className="text-xl font-bold text-[#FDF5E6]">{t.dashboard.proficiency}</h2>
             </div>
             <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -67,7 +70,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
                 </ResponsiveContainer>
             </div>
             <p className="text-sm text-[#9CA3AF] mt-4 text-center">
-                Scores represent percentage of correct answers per emotion.
+                {t.dashboard.chartDesc}
             </p>
         </div>
 
@@ -75,17 +78,17 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
         <div className="bg-[#2E3244] p-6 rounded-3xl shadow-lg">
             <div className="flex items-center gap-2 mb-6">
                 <Brain className="text-[#B0C4DE]" />
-                <h2 className="text-xl font-bold text-[#FDF5E6]">Detailed Stats</h2>
+                <h2 className="text-xl font-bold text-[#FDF5E6]">{t.dashboard.detailedStats}</h2>
             </div>
             
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-center">
                     <thead>
                         <tr className="border-b border-[#4B5563]">
-                            <th className="p-3 text-[#9CA3AF] text-left">Emotion</th>
-                            <th className="p-3 text-[#FDF5E6]">Attempts</th>
-                            <th className="p-3 text-[#FDF5E6]">Correct</th>
-                            <th className="p-3 text-[#FDF5E6]">Accuracy</th>
+                            <th className="p-3 text-[#9CA3AF] text-left">{t.dashboard.colEmotion}</th>
+                            <th className="p-3 text-[#FDF5E6]">{t.dashboard.colAttempts}</th>
+                            <th className="p-3 text-[#FDF5E6]">{t.dashboard.colCorrect}</th>
+                            <th className="p-3 text-[#FDF5E6]">{t.dashboard.colAccuracy}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,7 +97,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
                             const accuracy = s.attempts > 0 ? Math.round((s.correct / s.attempts) * 100) : 0;
                             return (
                                 <tr key={emotion} className="border-b border-[#4B5563]/50">
-                                    <td className="p-3 text-[#FDF5E6] font-bold text-left">{emotion}</td>
+                                    <td className="p-3 text-[#FDF5E6] font-bold text-left">{t.emotions[emotion]}</td>
                                     <td className="p-3 text-[#9CA3AF]">{s.attempts}</td>
                                     <td className="p-3 text-[#9CAF88]">{s.correct}</td>
                                     <td className="p-3">
@@ -109,7 +112,7 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onBack }) => {
                 </table>
             </div>
              <p className="text-sm text-[#9CA3AF] mt-4">
-                Monitor accuracy to identify which emotions need more practice.
+                {t.dashboard.monitorDesc}
             </p>
         </div>
       </div>

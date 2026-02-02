@@ -1,4 +1,4 @@
-# Luma 🌟
+# Lumi 🌟
 
 > *Illuminating the Social World for "Children from the Stars".*
 
@@ -12,11 +12,11 @@
 
 ## 📖 Project Background
 
-**Luma** is a high-fidelity interactive web application designed to support children with Autism Spectrum Disorder (ASD) in developing emotion recognition skills.
+**Lumi** is a high-fidelity interactive web application designed to support children with Autism Spectrum Disorder (ASD) in developing emotion recognition skills.
 
 Children with ASD are often poetically referred to as *"Children from the Stars"*—individuals who possess unique, beautiful perspectives but may find the unspoken rules of Earth's social interactions confusing. While systemizing abilities are often strong, the **Theory of Mind (ToM)**—the ability to attribute mental states to oneself and others—can be a challenge.
 
-**Luma bridges this gap.** By combining **Gamification** with **ABA (Applied Behavior Analysis)** strategies, Luma breaks down complex facial expressions into learnable, discrete patterns, providing a safe, predictable environment for social-emotional learning.
+**Lumi bridges this gap.** By combining **Gamification** with **ABA (Applied Behavior Analysis)** strategies, Lumi breaks down complex facial expressions into learnable, discrete patterns, providing a safe, predictable environment for social-emotional learning.
 
 ---
 
@@ -36,20 +36,19 @@ The application is divided into two distinct modes: **The Kid's Space** (Adventu
 
 *   **📊 The Lighthouse Dashboard:** Real-time data visualization using Radar Charts to track proficiency across specific emotions (Happy, Angry, Sad, Surprised).
 *   **📝 Growth Journal:** A digital log based on the ABC (Antecedent-Behavior-Consequence) model. Parents can track daily moods, identify triggers (Noise, Routine Changes), and correlate them with training sessions.
-*   **🔒 Privacy Core:** Luma is designed with a **Privacy-First** architecture. In the production roadmap, all facial recognition data is processed on the *Edge* (locally in the browser), ensuring no biometric data ever leaves the device.
+*   **🔒 Privacy Core:** Lumi is designed with a **Privacy-First** architecture. In the production roadmap, all facial recognition data is processed on the *Edge* (locally in the browser), ensuring no biometric data ever leaves the device.
 
 ---
 
 ## 🖼️ Screenshots
 
-*<img width="2513" height="1302" alt="image" src="https://github.com/user-attachments/assets/79b23a7e-ae3c-45a7-9214-d2db9420a94d" />
-*
+*(Place screenshots of the Landing Page, Emotion Puzzle, and Parent Dashboard here)*
 
 ---
 
 ## 🛠️ Technology Stack
 
-Luma is built with a focus on performance, accessibility, and sensory safety.
+Lumi is built with a focus on performance, accessibility, and sensory safety.
 
 *   **Frontend Framework:** React 19 (TypeScript).
 *   **Styling:** Tailwind CSS.
@@ -64,12 +63,12 @@ Luma is built with a focus on performance, accessibility, and sensory safety.
 
 ## 💿 Getting Started
 
-To run the Luma MVP locally:
+To run the Lumi MVP locally:
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/Hedy1Biblee/Luma.git
-    cd luma
+    git clone https://github.com/your-username/lumi.git
+    cd lumi
     ```
 
 2.  **Install dependencies**
@@ -95,4 +94,4 @@ To run the Luma MVP locally:
 
 ---
 
-*Luma © 2023 - Lighting the way.*
+*Lumi © 2023 - Lighting the way.*

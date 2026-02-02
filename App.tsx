@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Rocket, Anchor } from 'lucide-react';
-import { AppView, Level, Emotion, UserStats, MoodLog, Scenario } from './types';
+import { Rocket, Anchor, Globe } from 'lucide-react';
+import { AppView, Level, Emotion, UserStats, MoodLog, Scenario, Language } from './types';
 import { INITIAL_LEVELS, SCENARIOS } from './constants';
+import { TRANSLATIONS } from './translations';
 import StarBackground from './components/StarBackground';
 import LevelMap from './components/KidMode/LevelMap';
 import EmotionPuzzle from './components/KidMode/EmotionPuzzle';
@@ -12,6 +13,7 @@ import TrainingLog from './components/ParentMode/TrainingLog';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.LANDING);
+  const [language, setLanguage] = useState<Language>('en');
   const [levels, setLevels] = useState<Level[]>(INITIAL_LEVELS);
   
   // Game State
@@ -29,6 +31,9 @@ const App: React.FC = () => {
   });
 
   const [moodLogs, setMoodLogs] = useState<MoodLog[]>([]);
+
+  // Translations helper
+  const t = TRANSLATIONS[language];
 
   // Randomizer Helpers
   const getRandomEmotion = () => {
@@ -58,7 +63,6 @@ const App: React.FC = () => {
   };
 
   // Logic when a game is completed
-  // success: was the game solved? (For mirror/puzzle it's usually yes when finished. For story it might be no)
   const handleGameComplete = (success: boolean) => {
     const emotionPlayed = currentView === AppView.KID_STORY && currentScenario 
       ? currentScenario.correctEmotion 
@@ -77,12 +81,10 @@ const App: React.FC = () => {
         };
     });
 
-    // Update Level visual progress (Optional: just unlock generic star)
     if (activeLevelId && success) {
       setLevels(prev => prev.map(l => l.id === activeLevelId ? { ...l, stars: Math.min(l.stars + 1, 3) } : l));
     }
 
-    // Return to map
     setCurrentView(AppView.KID_DASHBOARD);
   };
 
@@ -90,17 +92,31 @@ const App: React.FC = () => {
     setMoodLogs(prev => [log, ...prev]);
   };
 
+  const toggleLanguage = () => {
+      setLanguage(prev => prev === 'en' ? 'cn' : 'en');
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case AppView.LANDING:
         return (
           <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4">
+            
+            {/* Language Toggle */}
+            <button 
+                onClick={toggleLanguage}
+                className="absolute top-6 right-6 bg-[#2E3244] hover:bg-[#3A3F55] p-3 rounded-full flex items-center gap-2 text-[#B0C4DE] border border-[#4B5563] transition-colors"
+            >
+                <Globe size={20} />
+                <span className="font-bold text-sm">{language === 'en' ? 'EN' : '中文'}</span>
+            </button>
+
             <div className="mb-12 text-center animate-fade-in-up">
               <div className="inline-block p-4 rounded-full bg-[#B0C4DE]/10 mb-4 backdrop-blur-sm">
                  <Rocket size={64} className="text-[#B0C4DE]" />
               </div>
-              <h1 className="text-6xl font-bold text-[#FDF5E6] tracking-tighter drop-shadow-lg mb-2">Luma</h1>
-              <p className="text-xl text-[#9CA3AF] font-medium">Lighting the way for little stars</p>
+              <h1 className="text-6xl font-bold text-[#FDF5E6] tracking-tighter drop-shadow-lg mb-2">{t.landing.title}</h1>
+              <p className="text-xl text-[#9CA3AF] font-medium">{t.landing.subtitle}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
@@ -111,8 +127,8 @@ const App: React.FC = () => {
                 <div className="absolute top-4 right-4 bg-[#B0C4DE] p-2 rounded-full">
                   <Rocket className="text-[#252836]" size={24} />
                 </div>
-                <h2 className="text-3xl font-bold text-[#FDF5E6] mb-2">Kid's Space</h2>
-                <p className="text-[#9CA3AF]">Start your space adventure! Play games and collect stars.</p>
+                <h2 className="text-3xl font-bold text-[#FDF5E6] mb-2">{t.landing.kidTitle}</h2>
+                <p className="text-[#9CA3AF]">{t.landing.kidDesc}</p>
               </button>
 
               <button 
@@ -122,8 +138,8 @@ const App: React.FC = () => {
                  <div className="absolute top-4 right-4 bg-[#9CAF88] p-2 rounded-full">
                   <Anchor className="text-white" size={24} />
                 </div>
-                <h2 className="text-3xl font-bold text-[#FDF5E6] mb-2">Parent's Lighthouse</h2>
-                <p className="text-[#9CA3AF]">Track progress, view insights, and manage settings.</p>
+                <h2 className="text-3xl font-bold text-[#FDF5E6] mb-2">{t.landing.parentTitle}</h2>
+                <p className="text-[#9CA3AF]">{t.landing.parentDesc}</p>
               </button>
             </div>
           </div>
@@ -133,6 +149,7 @@ const App: React.FC = () => {
         return (
           <LevelMap 
             levels={levels} 
+            lang={language}
             onSelectLevel={handleLevelSelect} 
             onBack={() => setCurrentView(AppView.LANDING)} 
           />
@@ -142,6 +159,7 @@ const App: React.FC = () => {
         return (
           <EmotionPuzzle 
             targetEmotion={currentEmotion}
+            lang={language}
             onComplete={handleGameComplete} 
             onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
           />
@@ -151,6 +169,7 @@ const App: React.FC = () => {
         return (
           <MagicMirror 
             targetEmotion={currentEmotion}
+            lang={language}
             onComplete={handleGameComplete} 
             onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
           />
@@ -161,6 +180,7 @@ const App: React.FC = () => {
         return (
             <StoryTheater 
                 scenario={currentScenario}
+                lang={language}
                 onComplete={handleGameComplete}
                 onBack={() => setCurrentView(AppView.KID_DASHBOARD)}
             />
@@ -169,8 +189,8 @@ const App: React.FC = () => {
       case AppView.PARENT_DASHBOARD:
         return (
           <div className="min-h-screen pb-12 relative z-10 overflow-y-auto">
-             <Dashboard stats={userStats} onBack={() => setCurrentView(AppView.LANDING)} />
-             <TrainingLog logs={moodLogs} onSaveLog={handleSaveMood} />
+             <Dashboard stats={userStats} lang={language} onBack={() => setCurrentView(AppView.LANDING)} />
+             <TrainingLog logs={moodLogs} lang={language} onSaveLog={handleSaveMood} />
           </div>
         );
 

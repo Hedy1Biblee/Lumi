@@ -1,31 +1,45 @@
 import React, { useState } from 'react';
 import { Calendar, Save, Clock } from 'lucide-react';
 import Button from '../Button';
-import { MoodLog } from '../../types';
+import { MoodLog, Language } from '../../types';
+import { TRANSLATIONS } from '../../translations';
 
 interface TrainingLogProps {
   logs: MoodLog[];
+  lang: Language;
   onSaveLog: (log: MoodLog) => void;
 }
 
-const TrainingLog: React.FC<TrainingLogProps> = ({ logs, onSaveLog }) => {
+const TrainingLog: React.FC<TrainingLogProps> = ({ logs, lang, onSaveLog }) => {
+  const t = TRANSLATIONS[lang];
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [triggers, setTriggers] = useState<string[]>([]);
 
   const moodOptions = [
-    { label: 'Calm', emoji: '😌', color: 'bg-[#9CAF88]' },
-    { label: 'Hyper', emoji: '⚡', color: 'bg-[#F0E68C] text-[#252836]' },
-    { label: 'Meltdown', emoji: '🌋', color: 'bg-[#E29578]' },
-    { label: 'Tired', emoji: '😴', color: 'bg-[#B0C4DE] text-[#252836]' },
+    { key: 'Calm', label: t.log.moods.Calm, emoji: '😌', color: 'bg-[#9CAF88]' },
+    { key: 'Hyper', label: t.log.moods.Hyper, emoji: '⚡', color: 'bg-[#F0E68C] text-[#252836]' },
+    { key: 'Meltdown', label: t.log.moods.Meltdown, emoji: '🌋', color: 'bg-[#E29578]' },
+    { key: 'Tired', label: t.log.moods.Tired, emoji: '😴', color: 'bg-[#B0C4DE] text-[#252836]' },
   ];
 
-  const triggerOptions = ['Noise', 'Routine Change', 'Hunger', 'Screen Time', 'Social'];
+  const triggerOptions = [
+      { key: 'Noise', label: t.log.triggers.Noise },
+      { key: 'Routine Change', label: t.log.triggers['Routine Change'] },
+      { key: 'Hunger', label: t.log.triggers.Hunger },
+      { key: 'Screen Time', label: t.log.triggers['Screen Time'] },
+      { key: 'Social', label: t.log.triggers.Social },
+  ];
 
-  const toggleTrigger = (t: string) => {
-    if (triggers.includes(t)) {
-      setTriggers(triggers.filter(item => item !== t));
+  const toggleTrigger = (triggerKey: string) => {
+    // We store the localized label or the key? Storing the localized label for display
+    // But for logic, it's better to store keys. For this demo, we store the label shown.
+    // Actually, let's store the translated string for the log display to be consistent with what user selected.
+    const triggerLabel = t.log.triggers[triggerKey as keyof typeof t.log.triggers];
+
+    if (triggers.includes(triggerLabel)) {
+      setTriggers(triggers.filter(item => item !== triggerLabel));
     } else {
-      setTriggers([...triggers, t]);
+      setTriggers([...triggers, triggerLabel]);
     }
   };
 
@@ -51,14 +65,14 @@ const TrainingLog: React.FC<TrainingLogProps> = ({ logs, onSaveLog }) => {
         
         {/* Mood Tracker Form */}
         <div className="bg-[#2E3244] p-6 rounded-3xl shadow-lg">
-            <h2 className="text-xl font-bold text-[#FDF5E6] mb-4">Today's Mood Check-in</h2>
+            <h2 className="text-xl font-bold text-[#FDF5E6] mb-4">{t.log.checkin}</h2>
             
             <div className="mb-6">
-                <label className="text-[#9CA3AF] text-sm mb-2 block">How was the mood today?</label>
+                <label className="text-[#9CA3AF] text-sm mb-2 block">{t.log.questionMood}</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {moodOptions.map(option => (
                         <button
-                            key={option.label}
+                            key={option.key}
                             onClick={() => setSelectedMood(option.label)}
                             className={`p-3 rounded-xl transition-all duration-200 flex flex-col items-center gap-1 ${
                                 selectedMood === option.label 
@@ -74,26 +88,29 @@ const TrainingLog: React.FC<TrainingLogProps> = ({ logs, onSaveLog }) => {
             </div>
 
             <div className="mb-6">
-                <label className="text-[#9CA3AF] text-sm mb-2 block">Any Triggers?</label>
+                <label className="text-[#9CA3AF] text-sm mb-2 block">{t.log.questionTrigger}</label>
                 <div className="flex flex-wrap gap-2">
-                    {triggerOptions.map(trigger => (
-                        <button
-                            key={trigger}
-                            onClick={() => toggleTrigger(trigger)}
-                            className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
-                                triggers.includes(trigger)
-                                ? 'bg-[#B0C4DE] text-[#252836]'
-                                : 'bg-[#252836] text-[#9CA3AF] border border-[#4B5563]'
-                            }`}
-                        >
-                            {trigger}
-                        </button>
-                    ))}
+                    {triggerOptions.map(trigger => {
+                        const isSelected = triggers.includes(trigger.label);
+                        return (
+                            <button
+                                key={trigger.key}
+                                onClick={() => toggleTrigger(trigger.key)}
+                                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                                    isSelected
+                                    ? 'bg-[#B0C4DE] text-[#252836]'
+                                    : 'bg-[#252836] text-[#9CA3AF] border border-[#4B5563]'
+                                }`}
+                            >
+                                {trigger.label}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
             <Button variant="success" className="w-full" size="sm" icon={<Save size={16} />} onClick={handleSave} disabled={!selectedMood}>
-                Save Log
+                {t.common.save}
             </Button>
         </div>
 
@@ -101,18 +118,18 @@ const TrainingLog: React.FC<TrainingLogProps> = ({ logs, onSaveLog }) => {
         <div className="bg-[#2E3244] p-6 rounded-3xl shadow-lg">
            <div className="flex items-center gap-2 mb-6">
                 <Clock className="text-[#B0C4DE]" />
-                <h2 className="text-xl font-bold text-[#FDF5E6]">Log History</h2>
+                <h2 className="text-xl font-bold text-[#FDF5E6]">{t.log.history}</h2>
             </div>
             <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2">
                 {logs.length === 0 && (
-                    <p className="text-[#9CA3AF] italic text-center py-8">No logs recorded yet.</p>
+                    <p className="text-[#9CA3AF] italic text-center py-8">{t.log.noLogs}</p>
                 )}
                 {logs.map(log => (
                     <div key={log.id} className="bg-[#252836] p-4 rounded-xl border border-[#4B5563]">
                         <div className="flex justify-between items-start mb-2">
                             <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                log.mood === 'Calm' ? 'bg-[#9CAF88] text-white' :
-                                log.mood === 'Meltdown' ? 'bg-[#E29578] text-white' : 'bg-[#B0C4DE] text-[#252836]'
+                                log.mood === t.log.moods.Calm ? 'bg-[#9CAF88] text-white' :
+                                log.mood === t.log.moods.Meltdown ? 'bg-[#E29578] text-white' : 'bg-[#B0C4DE] text-[#252836]'
                             }`}>
                                 {log.mood}
                             </span>

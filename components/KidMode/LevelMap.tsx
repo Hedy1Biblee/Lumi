@@ -1,15 +1,18 @@
 import React from 'react';
 import { Lock, Star, Play, ArrowLeft } from 'lucide-react';
-import { Level } from '../../types';
+import { Level, Language } from '../../types';
+import { TRANSLATIONS } from '../../translations';
 import Button from '../Button';
 
 interface LevelMapProps {
   levels: Level[];
+  lang: Language;
   onSelectLevel: (level: Level) => void;
   onBack: () => void;
 }
 
-const LevelMap: React.FC<LevelMapProps> = ({ levels, onSelectLevel, onBack }) => {
+const LevelMap: React.FC<LevelMapProps> = ({ levels, lang, onSelectLevel, onBack }) => {
+  const t = TRANSLATIONS[lang];
   // Constellation layout positions
   const positions = [
     { top: '60%', left: '20%' },
@@ -21,12 +24,12 @@ const LevelMap: React.FC<LevelMapProps> = ({ levels, onSelectLevel, onBack }) =>
     <div className="relative h-full w-full overflow-hidden">
        <div className="absolute top-4 left-4 z-20">
         <Button variant="secondary" size="sm" onClick={onBack} icon={<ArrowLeft size={20} />}>
-          Home
+          {t.common.home}
         </Button>
       </div>
 
       <h2 className="absolute top-8 w-full text-center text-3xl font-bold text-[#FDF5E6] z-10 tracking-widest drop-shadow-lg">
-        MISSION MAP
+        {t.map.title}
       </h2>
 
       {/* SVG Connecting Lines */}
@@ -38,6 +41,7 @@ const LevelMap: React.FC<LevelMapProps> = ({ levels, onSelectLevel, onBack }) =>
       {levels.map((level, index) => {
         const isLocked = level.status === 'locked';
         const pos = positions[index] || { top: '50%', left: '50%' };
+        const levelName = lang === 'cn' ? level.name_cn : level.name;
         
         return (
           <button
@@ -62,7 +66,7 @@ const LevelMap: React.FC<LevelMapProps> = ({ levels, onSelectLevel, onBack }) =>
                 <div className="bg-[#B0C4DE] rounded-full p-2 mb-1">
                    {level.type === 'puzzle' ? <Star size={24} className="text-[#252836] fill-current" /> : <Play size={24} className="text-[#252836] fill-current" />}
                 </div>
-                <span className="text-xs md:text-sm font-bold text-[#FDF5E6] text-center px-1">{level.name}</span>
+                <span className="text-xs md:text-sm font-bold text-[#FDF5E6] text-center px-1">{levelName}</span>
                 <div className="flex mt-1">
                   {[...Array(3)].map((_, i) => (
                     <Star key={i} size={10} className={`${i < level.stars ? 'text-yellow-400 fill-current' : 'text-[#4B5563]'}`} />

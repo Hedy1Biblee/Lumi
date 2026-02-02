@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Star, ArrowLeft, RefreshCw, Check } from 'lucide-react';
 import Button from '../Button';
 import { COLORS } from '../../constants';
-import { Emotion } from '../../types';
+import { Emotion, Language } from '../../types';
+import { TRANSLATIONS } from '../../translations';
 
 interface EmotionPuzzleProps {
   targetEmotion: Emotion;
+  lang: Language;
   onComplete: (success: boolean) => void;
   onBack: () => void;
 }
@@ -19,7 +21,8 @@ interface FeatureItem {
   src: React.ReactNode;
 }
 
-const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete, onBack }) => {
+const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, lang, onComplete, onBack }) => {
+  const t = TRANSLATIONS[lang];
   const [selectedFeature, setSelectedFeature] = useState<FeatureItem | null>(null);
   const [placedEyes, setPlacedEyes] = useState<FeatureItem | null>(null);
   const [placedMouth, setPlacedMouth] = useState<FeatureItem | null>(null);
@@ -41,9 +44,6 @@ const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete
     { id: 'm_surprised', type: 'mouth', emotion: Emotion.SURPRISED, src: <circle cx="120" cy="150" r="20" stroke="#252836" strokeWidth="8" fill="none" /> },
   ];
 
-  // Filter features to random subset + correct ones to avoid overcrowding? 
-  // For this demo, we show all to allow for "confusion" training.
-  
   const checkSuccess = () => {
     if (placedEyes?.emotion === targetEmotion && placedMouth?.emotion === targetEmotion) {
       setIsSuccess(true);
@@ -75,13 +75,13 @@ const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete
     <div className="flex flex-col h-full relative">
       <div className="absolute top-4 left-4 z-10">
         <Button variant="secondary" size="sm" onClick={onBack} icon={<ArrowLeft size={20} />}>
-          Map
+          {t.common.map}
         </Button>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center py-8">
         <h2 className="text-3xl font-bold text-[#FDF5E6] mb-8 text-center">
-          Make a <span className="text-[#B0C4DE]">{targetEmotion}</span> Face
+          {t.puzzle.titlePrefix} <span className="text-[#B0C4DE]">{t.emotions[targetEmotion]}</span> {t.puzzle.titleSuffix}
         </h2>
 
         {/* The Face Canvas */}
@@ -96,7 +96,7 @@ const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete
               className={`cursor-pointer hover:opacity-80 transition-opacity ${!placedEyes && selectedFeature?.type === 'eyes' ? 'opacity-50 animate-pulse' : ''}`}
             >
               <rect x="60" y="40" width="120" height="60" fill="transparent" />
-              {placedEyes ? placedEyes.src : <text x="120" y="80" textAnchor="middle" fill="#B0C4DE" fontSize="14">Eyes Here</text>}
+              {placedEyes ? placedEyes.src : <text x="120" y="80" textAnchor="middle" fill="#B0C4DE" fontSize="14">{t.puzzle.eyes}</text>}
             </g>
 
             <g 
@@ -104,7 +104,7 @@ const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete
               className={`cursor-pointer hover:opacity-80 transition-opacity ${!placedMouth && selectedFeature?.type === 'mouth' ? 'opacity-50 animate-pulse' : ''}`}
             >
               <rect x="70" y="120" width="100" height="80" fill="transparent" />
-              {placedMouth ? placedMouth.src : <text x="120" y="160" textAnchor="middle" fill="#B0C4DE" fontSize="14">Mouth Here</text>}
+              {placedMouth ? placedMouth.src : <text x="120" y="160" textAnchor="middle" fill="#B0C4DE" fontSize="14">{t.puzzle.mouth}</text>}
             </g>
           </svg>
 
@@ -120,10 +120,10 @@ const EmotionPuzzle: React.FC<EmotionPuzzleProps> = ({ targetEmotion, onComplete
         <div className="h-12 mt-6 flex items-center justify-center">
            {isSuccess ? (
              <div className="bg-[#9CAF88] px-6 py-2 rounded-xl flex items-center gap-2">
-               <Check size={24} /> <span className="font-bold text-lg">Correct!</span>
+               <Check size={24} /> <span className="font-bold text-lg">{t.puzzle.success}</span>
              </div>
            ) : (
-             <p className="text-[#9CA3AF]">Tap a part below, then tap the face.</p>
+             <p className="text-[#9CA3AF]">{t.puzzle.instruction}</p>
            )}
         </div>
       </div>
