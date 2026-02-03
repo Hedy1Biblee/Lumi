@@ -67,7 +67,7 @@ To run the Lumi MVP locally:
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/lumi.git
+    git clone https://github.com/hedy1biblee/lumi.git
     cd lumi
     ```
 
@@ -94,4 +94,4 @@ To run the Lumi MVP locally:
 
 ---
 
-*Lumi © 2023 - Lighting the way.*
+*Lumi © 2026- Lighting the way.*
