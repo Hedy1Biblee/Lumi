@@ -100,18 +100,18 @@ const App: React.FC = () => {
     switch (currentView) {
       case AppView.LANDING:
         return (
-          <div className="flex flex-col items-center justify-center min-h-screen relative z-10 px-4">
+          <div className="flex-1 flex flex-col items-center justify-center relative z-10 px-4 overflow-y-auto">
             
             {/* Language Toggle */}
             <button 
                 onClick={toggleLanguage}
-                className="absolute top-6 right-6 bg-[#2E3244] hover:bg-[#3A3F55] p-3 rounded-full flex items-center gap-2 text-[#B0C4DE] border border-[#4B5563] transition-colors"
+                className="absolute top-6 right-6 bg-[#2E3244] hover:bg-[#3A3F55] p-3 rounded-full flex items-center gap-2 text-[#B0C4DE] border border-[#4B5563] transition-colors z-50"
             >
                 <Globe size={20} />
                 <span className="font-bold text-sm">{language === 'en' ? 'EN' : '中文'}</span>
             </button>
 
-            <div className="mb-12 text-center animate-fade-in-up">
+            <div className="mb-12 text-center animate-fade-in-up mt-12 md:mt-0">
               <div className="inline-block p-4 rounded-full bg-[#B0C4DE]/10 mb-4 backdrop-blur-sm">
                  <Rocket size={64} className="text-[#B0C4DE]" />
               </div>
@@ -119,7 +119,7 @@ const App: React.FC = () => {
               <p className="text-xl text-[#9CA3AF] font-medium">{t.landing.subtitle}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl pb-8">
               <button 
                 onClick={() => setCurrentView(AppView.KID_DASHBOARD)}
                 className="group relative bg-[#2E3244] hover:bg-[#3A3F55] border-2 border-[#B0C4DE] p-8 rounded-3xl transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_40px_rgba(176,196,222,0.3)] text-left"
@@ -147,48 +147,56 @@ const App: React.FC = () => {
 
       case AppView.KID_DASHBOARD:
         return (
-          <LevelMap 
-            levels={levels} 
-            lang={language}
-            onSelectLevel={handleLevelSelect} 
-            onBack={() => setCurrentView(AppView.LANDING)} 
-          />
+          <div className="flex-1 relative w-full overflow-hidden">
+            <LevelMap 
+              levels={levels} 
+              lang={language}
+              onSelectLevel={handleLevelSelect} 
+              onBack={() => setCurrentView(AppView.LANDING)} 
+            />
+          </div>
         );
 
       case AppView.KID_PUZZLE:
         return (
-          <EmotionPuzzle 
-            targetEmotion={currentEmotion}
-            lang={language}
-            onComplete={handleGameComplete} 
-            onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
-          />
+          <div className="flex-1 relative w-full overflow-hidden">
+            <EmotionPuzzle 
+              targetEmotion={currentEmotion}
+              lang={language}
+              onComplete={handleGameComplete} 
+              onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
+            />
+          </div>
         );
 
       case AppView.KID_MIRROR:
         return (
-          <MagicMirror 
-            targetEmotion={currentEmotion}
-            lang={language}
-            onComplete={handleGameComplete} 
-            onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
-          />
+          <div className="flex-1 relative w-full overflow-hidden">
+            <MagicMirror 
+              targetEmotion={currentEmotion}
+              lang={language}
+              onComplete={handleGameComplete} 
+              onBack={() => setCurrentView(AppView.KID_DASHBOARD)} 
+            />
+          </div>
         );
         
       case AppView.KID_STORY:
         if (!currentScenario) return null;
         return (
-            <StoryTheater 
-                scenario={currentScenario}
-                lang={language}
-                onComplete={handleGameComplete}
-                onBack={() => setCurrentView(AppView.KID_DASHBOARD)}
-            />
+            <div className="flex-1 relative w-full overflow-y-auto">
+              <StoryTheater 
+                  scenario={currentScenario}
+                  lang={language}
+                  onComplete={handleGameComplete}
+                  onBack={() => setCurrentView(AppView.KID_DASHBOARD)}
+              />
+            </div>
         );
 
       case AppView.PARENT_DASHBOARD:
         return (
-          <div className="min-h-screen pb-12 relative z-10 overflow-y-auto">
+          <div className="flex-1 relative w-full z-10 overflow-y-auto pb-12">
              <Dashboard stats={userStats} lang={language} onBack={() => setCurrentView(AppView.LANDING)} />
              <TrainingLog logs={moodLogs} lang={language} onSaveLog={handleSaveMood} />
           </div>
@@ -200,7 +208,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden bg-[#252836] text-[#FDF5E6] selection:bg-[#B0C4DE] selection:text-[#252836]">
+    // Changed: Used h-screen and flex-col to force correct height calculation for children
+    <div className="h-screen w-full relative overflow-hidden bg-[#252836] text-[#FDF5E6] selection:bg-[#B0C4DE] selection:text-[#252836] flex flex-col">
       <StarBackground />
       {renderContent()}
     </div>
